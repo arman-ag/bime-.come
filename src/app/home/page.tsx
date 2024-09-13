@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -10,9 +9,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Form, useForm } from 'react-hook-form';
 
-const Main = () => {
+const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const form = useForm();
   const onSubmit = (data) => {
@@ -28,7 +27,7 @@ const Main = () => {
         >
           <FormField
             control={form.control}
-            name='nationalId:'
+            name='username'
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -41,7 +40,7 @@ const Main = () => {
           />
           <FormField
             control={form.control}
-            name='phoneNumber'
+            name='username'
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -59,4 +58,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Home;
