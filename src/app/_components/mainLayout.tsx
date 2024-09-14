@@ -1,8 +1,8 @@
 const MainLayout = ({ children }) => {
   return (
     <>
-      <header>
-        <h1>تکمیل اطلاعات</h1>
+      <header className='shadow-lg px-[1.25rem] py-[.9rem]'>
+        <h1 className='font-semibold	 text-lg	'>تکمیل اطلاعات</h1>
       </header>
       {children}
       <footer></footer>

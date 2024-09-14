@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import AddressDrawer from './_components/addressDrawer';
-import { getAddress } from './_service/service';
+import { getAddress, saveOrderRequest } from './_service/service';
 import { detailType } from './_service/type';
 import { storeUserInfo } from './redux/features/personalInfo/infoSlice';
 const Main = () => {
@@ -32,18 +32,26 @@ const Main = () => {
       .matches(phoneRegExp, 'شماره تلفن همراه وارد شده معتبر نیست')
       .required('این قسمت نمی‌تواند خالی باشد'),
     nationalId: Yup.string()
-      .matches(nationalIdRegExp, 'کدملی وارد شده معتبر نیست')
+      .matches(nationalIdRegExp, 'کد ملی وارد شده معتبر نیست')
       .required('این قسمت نمی‌تواند خالی باشد'),
   });
   const userInfo = useSelector((state) => state.personalInfo);
-  const form = useForm({
+  const {
+    formState: { errors },
+    ...form
+  } = useForm({
     resolver: yupResolver(schema),
     defaultValues: { ...userInfo },
   });
-  const onSubmit = (data) => {
+
+  const onSubmit = async (data) => {
     console.log('data', data);
     dispatch(storeUserInfo(data));
-    router.push('/successful-message');
+
+    try {
+      await saveOrderRequest(userInfo);
+      router.push('/successful-message');
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -56,65 +64,87 @@ const Main = () => {
       }
     })();
   }, []);
-
   return (
-    <>
-      <p>آدرس جهت درج روی بیمه‌نامه</p>
+    <div className='px-[1.2rem] mt-[2rem] '>
+      <p className=''>لطفا اطلاعات شخصی مالک خودرو را وارد کنید :</p>
+      <Separator className='mt-[.5rem] bg-[#E0E0E0]' />
+
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='w-2/3 space-y-6'
-        >
-          <FormField
-            control={form.control}
-            name='nationalId'
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type='number' placeholder='کدملی' {...field} />
-                </FormControl>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div>
+            <FormField
+              control={form.control}
+              name='nationalId'
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      className={`mt-[1rem] ${
+                        errors.nationalId && 'border-[#E61F10]'
+                      }`}
+                      type='number'
+                      placeholder='کد ملی'
+                      {...field}
+                    />
+                  </FormControl>
 
-                <FormMessage />
-              </FormItem>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='phoneNumber'
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      className={`mt-[1.37rem] ${
+                        errors.phoneNumber && 'border-[#E61F10]'
+                      }`}
+                      dir='rtl'
+                      type='tel'
+                      placeholder=' شماره تلفن همراه '
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <h2 className='font-semibold mt-[2rem] mb-[.5rem]	'>
+              آدرس جهت درج روی بیمه‌ نامه
+            </h2>
+            <Separator color='#E0E0E0' />
+            {userInfo.addressId ? (
+              <p>{userInfo.addressId}</p>
+            ) : (
+              <p className='text-sm	 mt-[1rem] mb-[.8rem]'>
+                لطفا آدرسی را که می‌خواهید روی بیمه‌ نامه درج شود، وارد کنید.
+              </p>
             )}
-          />
-          <FormField
-            control={form.control}
-            name='phoneNumber'
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    dir='rtl'
-                    type='tel'
-                    placeholder=' شماره تلفن همراه '
-                    {...field}
-                  />
-                </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <h2>آدرس جهت درج روی بیمه‌نامه</h2>
-          <Separator />
-          {userInfo.addressId ? (
-            <p>{userInfo.addressId}</p>
-          ) : (
-            <p>لطفا آدرسی را که می‌خواهید روی بیمه‌ نامه درج شود، وارد کنید.</p>
-          )}
-
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button>انتخاب از آدرس‌های من</Button>
-            </DrawerTrigger>
-            <AddressDrawer userAddress={userAddress} />
-          </Drawer>
-
-          <Button type='submit'>تایید و ادامه</Button>
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button
+                  color='#FFC453'
+                  className='bg-[#FFC453] hover:bg-[#ffc35381] text-[#000000] block w-full mt-[1.7rem]'
+                >
+                  انتخاب از آدرس‌های من
+                </Button>
+              </DrawerTrigger>
+              <AddressDrawer userAddress={userAddress} />
+            </Drawer>
+            <div className='flex justify-end mt-[2rem]'>
+              <Button className='block w-[8.75rem]' type='submit'>
+                تایید و ادامه
+              </Button>
+            </div>
+          </div>
         </form>
       </Form>
-    </>
+    </div>
   );
 };
 
