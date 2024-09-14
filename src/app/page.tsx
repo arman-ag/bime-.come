@@ -28,22 +28,23 @@ const Main = () => {
   const phoneRegExp = /^(\+98|0)?9\d{9}$/;
   const schema = Yup.object().shape({
     phoneNumber: Yup.string()
-      .matches(phoneRegExp, 'فرمت وارد شده صحیح نمی باشد')
-      .required('پر کردن این فیلد اجباریست'),
+      .matches(phoneRegExp, 'شماره تلفن همراه وارد شده معتبر نیست')
+      .required('این قسمت نمی‌تواند خالی باشد'),
     nationalId: Yup.string()
-      .matches(nationalIdRegExp, 'کدملی باید ۱۰ رقم باشد')
-      .required('پر کردن این فیلد اجباریست'),
+      .matches(nationalIdRegExp, 'کدملی وارد شده معتبر نیست')
+      .required('این قسمت نمی‌تواند خالی باشد'),
   });
+  const { userInfo } = useSelector((state) => state.personalInfo);
   const form = useForm({
     resolver: yupResolver(schema),
+    defaultValues: { ...userInfo },
   });
   const onSubmit = (data) => {
     console.log('data', data);
     dispatch(storeUserInfo(data));
-    // router.push('/successful-message');
+    router.push('/successful-message');
   };
-  const userImage = useSelector((state) => state);
-  console.log('userImage', userImage);
+
   useEffect(() => {
     (async function () {
       try {

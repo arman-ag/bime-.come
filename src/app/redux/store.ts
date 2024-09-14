@@ -1,8 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { userSlice } from './features/personalInfo/infoSlice';
-
+const rootReducer = combineReducers({
+  personalInfo: userSlice.reducer,
+});
 export const store = configureStore({
-  reducer: { userSlice },
+  reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
 });
 
