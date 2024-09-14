@@ -3,3 +3,8 @@ export interface detailType {
   name: string;
   details: string;
 }
+export interface personalInfoType {
+  nationalId: string;
+  phoneNumber: string;
+  addressId: string;
+}

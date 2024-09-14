@@ -14,13 +14,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import AddressDrawer from './_components/addressDrawer';
 import { getAddress } from './_service/service';
 import { detailType } from './_service/type';
+import { storeUserInfo } from './redux/features/personalInfo/infoSlice';
 const Main = () => {
   const [userAddress, setUserAddress] = useState<detailType[]>([]);
   const router = useRouter();
+  const dispatch = useDispatch();
   const nationalIdRegExp = /^[0-9]{10}$/;
   const phoneRegExp = /^(\+98|0)?9\d{9}$/;
   const schema = Yup.object().shape({
@@ -36,9 +39,11 @@ const Main = () => {
   });
   const onSubmit = (data) => {
     console.log('data', data);
-    router.push('/successful-message');
+    dispatch(storeUserInfo(data));
+    // router.push('/successful-message');
   };
-
+  const userImage = useSelector((state) => state);
+  console.log('userImage', userImage);
   useEffect(() => {
     (async function () {
       try {
