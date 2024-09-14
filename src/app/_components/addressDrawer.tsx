@@ -1,11 +1,7 @@
 import { X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import {
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-} from '@/components/ui/drawer';
+import { DrawerClose, DrawerContent } from '@/components/ui/drawer';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -27,7 +23,7 @@ const AddressDrawer = ({ userAddress, setChosenAddress }: propType) => {
   };
   return (
     <DrawerContent>
-      <div className='mx-auto w-full max-w-sm'>
+      <div className=' w-full '>
         <div className='px-[1.25rem] py-[1.5rem]'>
           <div className='flex items-center justify-between '>
             <h2 className='font-medium 	'>انتخاب آدرس</h2>
@@ -47,7 +43,7 @@ const AddressDrawer = ({ userAddress, setChosenAddress }: propType) => {
               e.stopPropagation();
             }}
           >
-            <div className='px-[1.25rem] h-[20.18rem] mt-[.25rem] mb-[4.18rem]'>
+            <div className='px-[1.25rem] h-[20.18rem] mt-[.25rem] mb-[2rem] '>
               <FormField
                 control={form.control}
                 name='addressId'
@@ -88,11 +84,16 @@ const AddressDrawer = ({ userAddress, setChosenAddress }: propType) => {
               />
             </div>
 
-            <DrawerFooter className='  shadow-lg'>
+            <div
+              style={{ boxShadow: '0px 3px 15px 3px rgba(34, 34, 34, 0.1)' }}
+              className='p-[1.5rem] '
+            >
               <DrawerClose asChild>
-                <Button type='submit'>انتخاب</Button>
+                <Button className='w-full' type='submit'>
+                  انتخاب
+                </Button>
               </DrawerClose>
-            </DrawerFooter>
+            </div>
           </form>
         </Form>
       </div>

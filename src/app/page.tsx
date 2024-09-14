@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+
+import { useToast } from '@/hooks/use-toast';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -21,9 +23,13 @@ import AddressDrawer from './_components/addressDrawer';
 import { getAddress, saveOrderRequest } from './_service/service';
 import { detailType } from './_service/type';
 import { storeUserInfo } from './redux/features/personalInfo/infoSlice';
+import { chosenAddressType, formSubmitType } from './type';
 const Main = () => {
   const [userAddress, setUserAddress] = useState<detailType[]>([]);
-  const [chosenAddress, setChosenAddress] = useState({});
+  const [chosenAddress, setChosenAddress] = useState<chosenAddressType | null>(
+    null
+  );
+  const { toast } = useToast();
   const router = useRouter();
   const dispatch = useDispatch();
   const nationalIdRegExp = /^[0-9]{10}$/;
@@ -44,14 +50,18 @@ const Main = () => {
     resolver: yupResolver(schema),
     defaultValues: { ...userInfo },
   });
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: formSubmitType) => {
     dispatch(storeUserInfo(data));
     const userData = { ...data, ...chosenAddress };
     try {
       await saveOrderRequest(userData);
       router.push('/successful-message');
     } catch (error) {
-      console.log(error);
+      toast({
+        variant: 'destructive',
+        title: error.status,
+        description: error.message,
+      });
     }
   };
   console.log('data', userInfo);
@@ -62,13 +72,17 @@ const Main = () => {
         const { data } = await getAddress();
         setUserAddress(data);
       } catch (error) {
-        console.log(error);
+        toast({
+          variant: 'destructive',
+          title: error.status,
+          description: error.message,
+        });
       }
     })();
   }, []);
   const userAddressName = () => {
     const address = userAddress.find(
-      (item) => item.id === chosenAddress.addressId
+      (item) => item.id === chosenAddress?.addressId
     );
     return address?.name;
   };
