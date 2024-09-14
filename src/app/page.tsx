@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -34,7 +35,7 @@ const Main = () => {
       .matches(nationalIdRegExp, 'کدملی وارد شده معتبر نیست')
       .required('این قسمت نمی‌تواند خالی باشد'),
   });
-  const { userInfo } = useSelector((state) => state.personalInfo);
+  const userInfo = useSelector((state) => state.personalInfo);
   const form = useForm({
     resolver: yupResolver(schema),
     defaultValues: { ...userInfo },
@@ -96,7 +97,13 @@ const Main = () => {
             )}
           />
           <h2>آدرس جهت درج روی بیمه‌نامه</h2>
-          <p>لطفا آدرسی را که می‌خواهید روی بیمه‌نامه درج شود، وارد کنید.</p>
+          <Separator />
+          {userInfo.addressId ? (
+            <p>{userInfo.addressId}</p>
+          ) : (
+            <p>لطفا آدرسی را که می‌خواهید روی بیمه‌ نامه درج شود، وارد کنید.</p>
+          )}
+
           <Drawer>
             <DrawerTrigger asChild>
               <Button>انتخاب از آدرس‌های من</Button>

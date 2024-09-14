@@ -1,9 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
-  userInfo: {
-    nationalId: '',
-    phoneNumber: '',
-  },
+  nationalId: '',
+  phoneNumber: '',
+  addressId: '',
 };
 
 export const userSlice = createSlice({
@@ -11,7 +10,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     storeUserInfo: (state, action) => {
-      return { userInfo: action.payload };
+      return {
+        ...state,
+        ...action.payload,
+      };
     },
   },
 });
