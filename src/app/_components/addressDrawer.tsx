@@ -18,7 +18,7 @@ type formSubmitType = {
 const AddressDrawer = ({ userAddress, setChosenAddress }: propType) => {
   const form = useForm();
 
-  const onSubmit = (data: formSubmitType): void => {
+  const onSubmit = (data: formSubmitType) => {
     setChosenAddress(data);
   };
   return (

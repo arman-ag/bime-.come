@@ -23,6 +23,7 @@ import AddressDrawer from './_components/addressDrawer';
 import { getAddress, saveOrderRequest } from './_service/service';
 import { detailType } from './_service/type';
 import { storeUserInfo } from './redux/features/personalInfo/infoSlice';
+import { RootState } from './redux/store';
 import { chosenAddressType, formSubmitType } from './type';
 const Main = () => {
   const [userAddress, setUserAddress] = useState<detailType[]>([]);
@@ -42,7 +43,7 @@ const Main = () => {
       .matches(nationalIdRegExp, 'کد ملی وارد شده معتبر نیست')
       .required('این قسمت نمی‌تواند خالی باشد'),
   });
-  const userInfo = useSelector((state) => state.personalInfo);
+  const userInfo = useSelector((state: RootState) => state.personalInfo);
   const {
     formState: { errors },
     ...form
@@ -56,7 +57,7 @@ const Main = () => {
     try {
       await saveOrderRequest(userData);
       router.push('/successful-message');
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
         title: error.status,
@@ -71,11 +72,11 @@ const Main = () => {
       try {
         const { data } = await getAddress();
         setUserAddress(data);
-      } catch (error) {
+      } catch (error: any) {
         toast({
           variant: 'destructive',
-          title: error.status,
-          description: error.message,
+          title: error?.status,
+          description: error?.message,
         });
       }
     })();
