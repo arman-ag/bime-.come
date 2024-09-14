@@ -11,19 +11,19 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { detailType } from '../_service/type';
-import { storeUserInfo } from '../redux/features/personalInfo/infoSlice';
 type propType = {
   userAddress: detailType[];
+  setChosenAddress: React.Dispatch<React.SetStateAction<string>>;
 };
-const AddressDrawer = ({ userAddress }: propType) => {
+type formSubmitType = {
+  addressId: string;
+};
+const AddressDrawer = ({ userAddress, setChosenAddress }: propType) => {
   const form = useForm();
-  const dispatch = useDispatch();
 
-  const onSubmit = (data) => {
-    dispatch(storeUserInfo(data));
-    console.log('data', data);
+  const onSubmit = (data: formSubmitType): void => {
+    setChosenAddress(data);
   };
   return (
     <DrawerContent>

@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   nationalId: '',
   phoneNumber: '',
-  addressId: '',
 };
 
 export const userSlice = createSlice({

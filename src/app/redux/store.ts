@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { userSlice } from './features/personalInfo/infoSlice';
 const rootReducer = combineReducers({
-  personalInfo: userSlice.reducer,
+  personalInfo: userSlice,
 });
 export const store = configureStore({
   reducer: rootReducer,

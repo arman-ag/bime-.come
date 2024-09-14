@@ -23,6 +23,7 @@ import { detailType } from './_service/type';
 import { storeUserInfo } from './redux/features/personalInfo/infoSlice';
 const Main = () => {
   const [userAddress, setUserAddress] = useState<detailType[]>([]);
+  const [chosenAddress, setChosenAddress] = useState({});
   const router = useRouter();
   const dispatch = useDispatch();
   const nationalIdRegExp = /^[0-9]{10}$/;
@@ -43,16 +44,17 @@ const Main = () => {
     resolver: yupResolver(schema),
     defaultValues: { ...userInfo },
   });
-
   const onSubmit = async (data) => {
-    console.log('data', data);
     dispatch(storeUserInfo(data));
-
+    const userData = { ...data, ...chosenAddress };
     try {
-      await saveOrderRequest(userInfo);
+      await saveOrderRequest(userData);
       router.push('/successful-message');
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
+  console.log('data', userInfo);
 
   useEffect(() => {
     (async function () {
@@ -64,6 +66,12 @@ const Main = () => {
       }
     })();
   }, []);
+  const userAddressName = () => {
+    const address = userAddress.find(
+      (item) => item.id === chosenAddress.addressId
+    );
+    return address?.name;
+  };
   return (
     <div className='px-[1.2rem] mt-[2rem] '>
       <p className=''>لطفا اطلاعات شخصی مالک خودرو را وارد کنید :</p>
@@ -117,8 +125,10 @@ const Main = () => {
               آدرس جهت درج روی بیمه‌ نامه
             </h2>
             <Separator color='#E0E0E0' />
-            {userInfo.addressId ? (
-              <p>{userInfo.addressId}</p>
+            {chosenAddress?.addressId ? (
+              <p className='text-sm	 mt-[1rem] mb-[.8rem]'>
+                {userAddressName()}
+              </p>
             ) : (
               <p className='text-sm	 mt-[1rem] mb-[.8rem]'>
                 لطفا آدرسی را که می‌خواهید روی بیمه‌ نامه درج شود، وارد کنید.
@@ -134,7 +144,10 @@ const Main = () => {
                   انتخاب از آدرس‌های من
                 </Button>
               </DrawerTrigger>
-              <AddressDrawer userAddress={userAddress} />
+              <AddressDrawer
+                setChosenAddress={setChosenAddress}
+                userAddress={userAddress}
+              />
             </Drawer>
             <div className='flex justify-end mt-[2rem]'>
               <Button className='block w-[8.75rem]' type='submit'>
